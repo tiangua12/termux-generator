@@ -89,6 +89,11 @@ install_plugin() {
 
 # Funktion, um Bootstrap-Patches anzuwenden
 patch_bootstraps() {
+    # Use GitHub-hosted dialog tarball to avoid CI download truncation
+    local dialog_build="termux-packages-main/packages/dialog/build.sh"
+    if [ -f "$dialog_build" ]; then
+        sed -i 's#https://invisible-mirror.net/archives/dialog/dialog-1.3-20260721.tgz#https://raw.githubusercontent.com/tiangua12/termux-generator/main/dialog-1.3-20260721.tgz#g' "$dialog_build"
+    fi
     # The reason why it is necessary to replace the name first, then patch bootstraps, but do the reverse for apps,
     # is because command-not-found must be partially unpatched back to the default TERMUX_PREFIX to build,
     # so that patch must apply after the bootstraps' name replacement has completed, but the apps contain the
